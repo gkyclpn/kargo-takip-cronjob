@@ -2,12 +2,13 @@
 Description=kargotakip cronjob service
 
 [Service]
-ExecStart=node /usr/local/kargo-takip-cronjob/app.js
-Restart=always
+Environment=PATH=/usr/bin:/usr/local/bin
 User=root
 Group=nogroup
-Environment=PATH=/usr/bin:/usr/local/bin
 WorkingDirectory=/usr/local/kargo-takip-cronjob
+ExecStart=/home/gokayckunduzapp/.nvm/versions/node/v19.4.0/bin/node /usr/local/kargo-takip-cronjob/app.js
+Restart=always
+
 
 [Install]
 WantedBy=multi-user.target
