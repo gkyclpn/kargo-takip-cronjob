@@ -1,0 +1,31 @@
+name: Kargotakip Cronjob CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PKG_VERSION: ${{ github.sha }}
+      PROJECT_PATH: /usr/local/kargo-takip-cronjob
+      SERVICE_PATH: /lib/systemd/system
+    steps:
+      - uses: actions/checkout@v3
+      - name: echo
+        run: echo $PKG_VERSION
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          envs: PKG_VERSION, PROJECT_PATH, SERVICE_PATH
+          script: |
+            cd $PROJECT_PATH;git checkout - *;git checkout main;git pull origin main
+            cmp --silent $PROJECT_PATH/kargotakip_cronjob.service $SERVICE_PATH/kargotakip_cronjob.service || sudo cp -rf $PROJECT_PATH/kargotakip_cronjob.service $SERVICE_PATH;sudo systemctl daemon-reload
+            cd $PROJECT_PATH;npm install
+            sudo chown -R gokayckunduzapp:gokayckunduzapp $PROJECT_PATH
+            sudo systemctl restart kargotakip_cronjob.service
