@@ -13,6 +13,7 @@ async function getAllMessages() {
                 const trendyolRes = await axios.post(`${process.env.KARGO_TAKIP_SERVER_HOST}/kargotakip/user/getTrendyolMessages`, {id: user.id})
                 const trendyolYemekRes = await axios.post(`${process.env.KARGO_TAKIP_SERVER_HOST}/kargotakip/user/getTrendyolYemekMessages`, {id: user.id})
                 const hepsiburadaRes = await axios.post(`${process.env.KARGO_TAKIP_SERVER_HOST}/kargotakip/user/getHepsiburadaMessages`, {id: user.id})
+                console.log(trendyolRes.data)
             }
         }))
     }
